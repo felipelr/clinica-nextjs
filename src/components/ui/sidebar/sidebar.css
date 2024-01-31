@@ -1,0 +1,7 @@
+.sidebar-dropdown + ul {
+    display: none;
+}
+
+.sidebar-dropdown:focus + ul {
+    display: unset;
+}

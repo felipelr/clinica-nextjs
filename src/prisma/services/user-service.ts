@@ -2,7 +2,7 @@ import { IService } from './interfaces/IService'
 import { User } from './types/User'
 import prisma from '@/prisma/index'
 
-export class UserService implements IService<User> {
+class UserService implements IService<User> {
 
     constructor() {
     }
@@ -15,14 +15,14 @@ export class UserService implements IService<User> {
         catch(err)
         {   
             console.error(err)
-            return null
+            throw err
         }
         finally {
             await prisma.$disconnect()
         }
     }
 
-    async login (email: string): Promise<User | null> {
+    async login (email: string, password: string): Promise<User | null> {
         try {
             const user = await prisma.user.findFirst({
                 where: {
@@ -36,10 +36,12 @@ export class UserService implements IService<User> {
         catch(err)
         {   
             console.error(err)
-            return null
+            throw err
         }
         finally {
             await prisma.$disconnect()
         }
     }
 }
+
+export const userService = new UserService()
