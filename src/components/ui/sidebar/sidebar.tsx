@@ -1,16 +1,21 @@
 'use client'
 
+import { useState } from "react"
 import { useDetectClickOutside } from "@/common/hooks/useDetectClickOutside"
 import './sidebar.css'
 
-type SidebarProps = {
-    closeToggle: () => void
-    open: boolean
-}
-
-export const Sidebar = ({ closeToggle, open = false }: SidebarProps) => {
-    const ref = useDetectClickOutside({ onTriggered: closeToggle })
+export const Sidebar = () => {
+    const [open, setOpen] = useState(false)
+    const ref = useDetectClickOutside({
+        onTriggered: () => {
+            setOpen(prev => !prev)
+        }
+    })
     const companyName = 'Nome da empresa'
+
+    const closeToggle = () => {
+        setOpen(prev => !prev)
+    }
 
     return (
         <div ref={ref}>

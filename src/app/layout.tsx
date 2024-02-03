@@ -5,7 +5,7 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Clinica VivaMais',
+  title: 'Home | Clinica VivaMais',
   description: 'ERP para clinicas de fisioterapia',
 }
 
