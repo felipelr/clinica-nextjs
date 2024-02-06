@@ -11,12 +11,22 @@ datasource db {
 }
 
 model User {
-  id   String @id @default(uuid())
+  id String @id @default(uuid())
   email String
-  name  String
-  domain  String
-  password  String
+  name String
+  password String
   createdAt DateTime @default(now())
+  domainId String?
+  domain Domain?  @relation(fields: [domainId], references: [id]) 
 
   @@map("user")
+}
+
+model Domain {
+  id String @id @default(uuid())
+  domain String
+  createdAt DateTime @default(now())
+  users User[]
+
+  @@map("domain")
 }
