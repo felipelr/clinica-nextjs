@@ -1,19 +1,19 @@
 import { IService } from './interfaces/IService'
 import { User } from './types/User'
 import prisma from '@/prisma/index'
+import bcrypt from 'bcrypt'
 
 class UserService implements IService<User> {
 
     constructor() {
     }
 
-    async getAll (): Promise<User[] | null> {
+    async getAll(): Promise<User[] | null> {
         try {
             const allUsers = await prisma.user.findMany()
             return allUsers
         }
-        catch(err)
-        {   
+        catch (err) {
             console.error(err)
             throw err
         }
@@ -22,7 +22,7 @@ class UserService implements IService<User> {
         }
     }
 
-    async login (email: string, password: string): Promise<User | null> {
+    async login(email: string, password: string): Promise<User | null> {
         try {
             const user = await prisma.user.findFirst({
                 where: {
@@ -31,10 +31,14 @@ class UserService implements IService<User> {
                     }
                 }
             })
-            return user
+            if (user) {
+                //await bcrypt.hash(myPlaintextPassword, saltRounds)
+                const verified = await bcrypt.compare(password, user.password)
+                if (verified) return user
+            }
+            return null
         }
-        catch(err)
-        {   
+        catch (err) {
             console.error(err)
             throw err
         }

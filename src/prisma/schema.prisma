@@ -11,10 +11,12 @@ datasource db {
 }
 
 model User {
-  idusuario    Int     @id @default(autoincrement())
+  id   String @id @default(uuid())
   email String
-  nome  String?
-  sobrenome  String?
+  name  String
+  domain  String
+  password  String
+  createdAt DateTime @default(now())
 
-  @@map("usuario")
+  @@map("user")
 }
