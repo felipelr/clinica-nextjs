@@ -10,9 +10,8 @@ export default async function middleware(request: NextRequest) {
   if (session) {
     try {
       const user = await jwtHelper.verify(atob(session))
-      console.log('user', user)
     } catch (err) {
-      console.log('err', err)
+      console.error('err', err)
     }
   }
 
