@@ -13,8 +13,8 @@ export async function authenticate(prevState: string, formData: FormData): Promi
     }
 
     const payload = {
-      sub: String(user.idusuario),
-      email: `${user.nome} ${user.sobrenome}`,
+      sub: String(user.id),
+      email: user.email,
       createdAt: new Date().toISOString(),
     };
     
@@ -27,7 +27,7 @@ export async function authenticate(prevState: string, formData: FormData): Promi
     cookieHelper.set(`${EnvHelper.getVariable(EnvVariables.NEXT_PUBLIC_AUTH_TOKEN)}`, token)   
     return 'sucesss' 
   } catch (error) {
-    console.log(error)
+    console.error(error)
     return 'Desculpe, ocorreu um erro tente novamente mais tarde'
   }
 }

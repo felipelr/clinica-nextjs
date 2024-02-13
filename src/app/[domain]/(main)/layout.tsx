@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import { ReactNode } from "react";
-import { Sidebar } from "@/components/ui/sidebar/sidebar";
+import Sidebar from "@/components/ui/sidebar/sidebar";
 
 type DashboardLayoutProps = {
   params: { domain: string }

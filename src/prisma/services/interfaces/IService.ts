@@ -1,3 +1,5 @@
+export type ParamsProps = Record<string, string>
 export interface IService<T> {
-    getAll: () => Promise<T[] | null>
+    getById: (id: string) => Promise<T | null>
+    getAll: (params?: ParamsProps) => Promise<T[] | null>
 }

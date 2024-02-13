@@ -10,23 +10,127 @@ datasource db {
   url      = env("NEXT_DATABASE_URL")
 }
 
+enum ScheduleEventStatusEnum {
+  WAITING
+  DID_NOT_ATTEND
+  APPOINTMENT_POSTPONED
+  APPOINTMENT_POSTPONED_AGAIN
+  ATTENDED
+  UNAVAILABLE
+  REPLACEMENT
+  EXPERIMENTAL
+}
+
 model User {
   id String @id @default(uuid())
   email String
   name String
   password String
+  active Boolean @default(true)
   createdAt DateTime @default(now())
-  domainId String?
-  domain Domain?  @relation(fields: [domainId], references: [id]) 
+  modifiedAt DateTime @default(now())
+  domainId String
+  domain Domain  @relation(fields: [domainId], references: [id]) 
 
-  @@map("user")
+  @@map("users")
 }
 
 model Domain {
   id String @id @default(uuid())
   domain String
+  active Boolean @default(true)
   createdAt DateTime @default(now())
+  modifiedAt DateTime @default(now())
   users User[]
+  professionals Professional[]
+  schedules Schedule[]
+  scheduleEvents ScheduleEvent[]
+  companies Company[]
+  patients Patient[]
 
-  @@map("domain")
+  @@map("domains")
+}
+
+model Professional {
+  id String @id @default(uuid())
+  email String
+  name String
+  document String
+  document2 String
+  active Boolean @default(true)
+  createdAt DateTime @default(now())
+  modifiedAt DateTime @default(now())
+  domainId String
+  domain Domain  @relation(fields: [domainId], references: [id]) 
+  schedules Schedule[]
+
+  @@map("professionals")
+}
+
+model Schedule {
+  id String @id @default(uuid())
+  name String
+  active Boolean @default(true)
+  createdAt DateTime @default(now())
+  modifiedAt DateTime @default(now())
+  professionalId String
+  professional Professional  @relation(fields: [professionalId], references: [id]) 
+  domainId String
+  domain Domain  @relation(fields: [domainId], references: [id]) 
+  scheduleEvents ScheduleEvent[]
+
+  @@map("schedules")
+}
+
+model ScheduleEvent {
+  id String @id @default(uuid())
+  title String
+  description String?
+  eventStatus ScheduleEventStatusEnum @default(WAITING)
+  startDate DateTime
+  endDate DateTime
+  createdAt DateTime @default(now())
+  modifiedAt DateTime @default(now())
+  domainId String
+  domain Domain  @relation(fields: [domainId], references: [id]) 
+  scheduleId String
+  schedule Schedule  @relation(fields: [scheduleId], references: [id]) 
+  patientId String
+  patient Patient  @relation(fields: [patientId], references: [id])
+
+  @@map("schedule_events")
+}
+
+model Company {
+  id String @id @default(uuid())
+  name String
+  tradeName String
+  document String
+  logo String?
+  theme String?
+  contact String?
+  contactPhone String?
+  active Boolean @default(true)
+  createdAt DateTime @default(now())
+  modifiedAt DateTime @default(now())
+  domainId String
+  domain Domain  @relation(fields: [domainId], references: [id]) 
+
+  @@map("companies")
+}
+
+model Patient {
+  id String @id @default(uuid())
+  name String
+  email String?
+  document String?
+  document2 String?
+  active Boolean @default(true)
+  createdAt DateTime @default(now())
+  modifiedAt DateTime @default(now())
+  domainId String
+  domain Domain  @relation(fields: [domainId], references: [id])
+  scheduleEvents ScheduleEvent[]
+
+  @@map("patients")
 }

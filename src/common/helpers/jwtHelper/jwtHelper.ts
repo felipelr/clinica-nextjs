@@ -23,7 +23,7 @@ export class JwtHelper implements IJwtHelper {
             const secret = new TextEncoder().encode(EnvHelper.getVariable(EnvVariables.NEXT_JWT_KEY));
             return (await jose.jwtVerify(token, secret)).payload as any
         } catch (error) {
-            console.log(error);
+            console.error(error);
             throw new Error("Your token has expired.");
         }
     }

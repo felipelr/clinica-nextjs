@@ -3,12 +3,13 @@
 import { authenticate } from '@/common/auth/actions'
 import { useFormState, useFormStatus } from 'react-dom'
 import { redirect } from 'next/navigation'
+import ButtonPrimary from '@/components/ui/buttons/button-primary'
 
 export default function Page() {
     const [message, formAction] = useFormState(authenticate, '')
     const companyName = 'Nome da Empresa'
 
-    if(message === 'sucesss') {
+    if (message === 'sucesss') {
         redirect('/')
     }
 
@@ -47,8 +48,8 @@ function LoginButton() {
     const { pending } = useFormStatus()
 
     return (
-        <button type="submit" className="w-full px-5 py-3 text-base font-medium text-center text-white bg-violet-700 rounded-lg hover:bg-violet-800 focus:ring-4 focus:ring-violet-300 sm:w-auto dark:bg-violet-600 dark:hover:bg-violet-700 dark:focus:ring-violet-800">
+        <ButtonPrimary type="submit" className='w-full'>
             {pending ? 'Acessando...' : 'Acessar sua conta'}
-        </button>
+        </ButtonPrimary>
     )
 }

@@ -8,10 +8,45 @@ class UserService implements IService<User> {
     constructor() {
     }
 
+    async getById(id: string): Promise<User | null> {
+        try {
+            return await prisma.user.findUniqueOrThrow({
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    domainId: true,
+                    active: true,
+                    createdAt: true,
+                    modifiedAt: true,
+                    domain: true
+                },
+                where: { id },                
+            })
+        }
+        catch (err) {
+            console.error(err)
+            throw err
+        }
+        finally {
+            await prisma.$disconnect()
+        }
+    }
+
     async getAll(): Promise<User[] | null> {
         try {
-            const allUsers = await prisma.user.findMany()
-            return allUsers
+            return await prisma.user.findMany({
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    domainId: true,
+                    active: true,
+                    createdAt: true,
+                    modifiedAt: true,
+                    domain: true
+                }
+            })
         }
         catch (err) {
             console.error(err)
@@ -29,12 +64,13 @@ class UserService implements IService<User> {
                     email: {
                         equals: email
                     }
-                }
+                },
+                include: { domain: true }
             })
             if (user) {
-                //await bcrypt.hash(myPlaintextPassword, saltRounds)
                 const verified = await bcrypt.compare(password, user.password)
-                if (verified) return user
+                const { password: userpass, ...userWithoutPassword } = user
+                if (verified) return userWithoutPassword
             }
             return null
         }
