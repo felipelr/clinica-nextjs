@@ -1,15 +1,14 @@
 import { IService, ParamsProps } from './interfaces/IService'
-import prisma from '@/prisma/index'
 import { Schedule } from './types/Schedule'
+import { PrismaClient } from '@prisma/client'
+export class ScheduleService implements IService<Schedule> {
 
-class ScheduleService implements IService<Schedule> {
-
-    constructor() {
+    constructor(private readonly prisma: PrismaClient) {
     }
 
     async getById(id: string): Promise<Schedule | null> {
         try {
-            return await prisma.schedule.findUniqueOrThrow({
+            return await this.prisma.schedule.findUnique({
                 where: { id },
                 include: { domain: true, professional: true }
             })
@@ -27,7 +26,7 @@ class ScheduleService implements IService<Schedule> {
         try {
             const page = Number(params?.page || 1)
             const pageSize = Number(params?.pageSize || 10)
-            return await prisma.schedule.findMany({
+            return await this.prisma.schedule.findMany({
                 skip: (page - 1) * pageSize,
                 take: pageSize,
                 include: { domain: true, professional: true }
@@ -42,5 +41,3 @@ class ScheduleService implements IService<Schedule> {
         }
     }
 }
-
-export const scheduleService = new ScheduleService()

@@ -1,4 +1,4 @@
-import { scheduleService } from "@/prisma/services/schedule-service";
+import { scheduleService } from "@/prisma/services";
 
 type ScheduleDetailPageProps = {
     params: { slug: string };

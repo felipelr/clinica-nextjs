@@ -38,6 +38,7 @@ model User {
 model Domain {
   id String @id @default(uuid())
   domain String
+  subdomain String
   active Boolean @default(true)
   createdAt DateTime @default(now())
   modifiedAt DateTime @default(now())

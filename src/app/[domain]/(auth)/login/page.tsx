@@ -5,9 +5,8 @@ import { useFormState, useFormStatus } from 'react-dom'
 import { redirect } from 'next/navigation'
 import ButtonPrimary from '@/components/ui/buttons/button-primary'
 
-export default function Page() {
+export default function LoginPage() {
     const [message, formAction] = useFormState(authenticate, '')
-    const companyName = 'Nome da Empresa'
 
     if (message === 'sucesss') {
         redirect('/')
@@ -39,7 +38,6 @@ export default function Page() {
                 </div>
                 <LoginButton />
             </form>
-            <p className="text-xs text-gray-600 text-center mt-10">&copy; {`${new Date().getFullYear()} ${companyName}`}</p>
         </div>
     )
 }

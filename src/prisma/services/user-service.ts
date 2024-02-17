@@ -1,16 +1,16 @@
+import { PrismaClient } from '@prisma/client'
 import { IService } from './interfaces/IService'
 import { User } from './types/User'
 import prisma from '@/prisma/index'
 import bcrypt from 'bcrypt'
+export class UserService implements IService<User> {
 
-class UserService implements IService<User> {
-
-    constructor() {
+    constructor(private readonly prisma: PrismaClient) {
     }
 
     async getById(id: string): Promise<User | null> {
         try {
-            return await prisma.user.findUniqueOrThrow({
+            return await this.prisma.user.findUnique({
                 select: {
                     id: true,
                     name: true,
@@ -35,7 +35,7 @@ class UserService implements IService<User> {
 
     async getAll(): Promise<User[] | null> {
         try {
-            return await prisma.user.findMany({
+            return await this.prisma.user.findMany({
                 select: {
                     id: true,
                     name: true,
@@ -59,7 +59,7 @@ class UserService implements IService<User> {
 
     async login(email: string, password: string): Promise<User | null> {
         try {
-            const user = await prisma.user.findFirst({
+            const user = await this.prisma.user.findFirst({
                 where: {
                     email: {
                         equals: email
@@ -83,5 +83,3 @@ class UserService implements IService<User> {
         }
     }
 }
-
-export const userService = new UserService()

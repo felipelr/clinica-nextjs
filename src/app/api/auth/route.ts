@@ -1,4 +1,4 @@
-import { userService } from "@/prisma/services/user-service"
+import { userService } from "@/prisma/services"
 
 export async function GET(request: Request) {
     const users = await userService.getAll()

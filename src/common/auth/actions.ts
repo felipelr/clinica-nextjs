@@ -1,9 +1,26 @@
 'use server'
- 
-import { userService } from '@/prisma/services/user-service'
+
+import { unstable_cache } from "next/cache";
 import { cookieHelper } from '@/common/helpers/cookieHelper';
 import { jwtHelper } from '../helpers/jwtHelper';
 import { EnvHelper, EnvVariables } from '../helpers/enviromentHelper/envHelper';
+import { companyService, userService } from "@/prisma/services";
+
+export async function getSiteData(domain: string) {
+  const currentDomain = EnvHelper.getVariable(EnvVariables.NEXT_PUBLIC_ROOT_DOMAIN) || ''
+  const subdomain = domain.endsWith(`.${currentDomain}`) ? domain.replace(`.${currentDomain}`, "") : '';
+
+  return await unstable_cache(
+    async () => {
+      return companyService.getByDomain(currentDomain, subdomain)
+    },
+    [`${domain}-metadata`],
+    {
+      revalidate: 900,
+      tags: [`${domain}-metadata`],
+    },
+  )();
+}
  
 export async function authenticate(prevState: string, formData: FormData): Promise<string> {
   try {

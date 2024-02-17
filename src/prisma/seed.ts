@@ -11,7 +11,8 @@ async function main() {
     if (!domainFind) {
         const domainTest = await prisma.domain.create({
             data: {
-                domain: 'test.com',
+                domain: 'localhost:3000',
+                subdomain: 'test',
                 users: {
                     create: [
                         {

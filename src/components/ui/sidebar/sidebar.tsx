@@ -13,10 +13,9 @@ export default function Sidebar() {
     const [open, setOpen] = useState(false)
     const ref = useDetectClickOutside({
         onTriggered: () => {
-            setOpen(prev => !prev)
+            setOpen(false)
         }
     })
-    const companyName = 'Nome da empresa'
 
     const closeToggle = () => {
         setOpen(prev => !prev)
@@ -31,7 +30,7 @@ export default function Sidebar() {
                 </svg>
             </button>
 
-            <aside id="logo-sidebar" className={`fixed top-0 left-0 z-40 w-64 h-screen transition-transform ${open ? '' : '-translate-x-full'} sm:translate-x-0`} aria-label="Sidebar">
+            <aside id="logo-sidebar" className={`fixed top-0 left-0 z-40 w-64 h-screen transition-transform ${open ? '' : '-translate-x-full'} sm:translate-x-0 shadow-lg shadow-gray-500/50 sm:shadow-none`} aria-label="Sidebar">
                 <div className="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800">
                     <a href="https://flowbite.com/" className="flex items-center ps-2.5 mb-5">
                         <img
