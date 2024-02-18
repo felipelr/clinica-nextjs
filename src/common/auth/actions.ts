@@ -7,12 +7,13 @@ import { EnvHelper, EnvVariables } from '../helpers/enviromentHelper/envHelper';
 import { companyService, userService } from "@/prisma/services";
 
 export async function getSiteData(domain: string) {
-  const currentDomain = EnvHelper.getVariable(EnvVariables.NEXT_PUBLIC_ROOT_DOMAIN) || ''
-  const subdomain = domain.endsWith(`.${currentDomain}`) ? domain.replace(`.${currentDomain}`, "") : '';
+  const rootDomain = EnvHelper.getVariable(EnvVariables.NEXT_PUBLIC_ROOT_DOMAIN) || ''
+  const currentDomain = domain.replace(".localhost:3000", `.${rootDomain}`);
+  const subdomain = currentDomain.endsWith(`.${rootDomain}`) ? currentDomain.replace(`.${rootDomain}`, "") : '';
 
   return await unstable_cache(
     async () => {
-      return companyService.getByDomain(currentDomain, subdomain)
+      return companyService.getByDomain(rootDomain, subdomain)
     },
     [`${domain}-metadata`],
     {
