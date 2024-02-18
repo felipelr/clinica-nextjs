@@ -51,8 +51,8 @@ export default async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/", request.url));
   }
 
-  // rewrite everything else to `/[domain]/[slug] dynamic route
-  return NextResponse.rewrite(new URL(`/${hostname}${path}`, request.url));
+  // rewrite everything else to `/app/[domain]/[slug] dynamic route
+  return NextResponse.rewrite(new URL(`/app/${hostname}${path}`, request.url));
 }
 
 export const config = {
