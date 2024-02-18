@@ -46,9 +46,9 @@ export default async function middleware(request: NextRequest) {
 
   // rewrites for app pages
   if (!session && path !== "/login") {
-    return NextResponse.redirect(new URL("/login", request.url));
+    //return NextResponse.redirect(new URL("/login", request.url));
   } else if (session && path == "/login") {
-    return NextResponse.redirect(new URL("/", request.url));
+    //return NextResponse.redirect(new URL("/", request.url));
   }
 
   // rewrite everything else to `/app/[domain]/[slug] dynamic route
