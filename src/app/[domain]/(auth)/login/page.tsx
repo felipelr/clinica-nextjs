@@ -5,7 +5,12 @@ import { useFormState, useFormStatus } from 'react-dom'
 import { redirect } from 'next/navigation'
 import ButtonPrimary from '@/components/ui/buttons/button-primary'
 
-export default function LoginPage() {
+type loginPageProps = {
+  params: { domain: string }
+}
+
+export default function LoginPage({ params }: loginPageProps) {
+    const domain = decodeURIComponent(params.domain);
     const [message, formAction] = useFormState(authenticate, '')
 
     if (message === 'sucesss') {
@@ -19,6 +24,7 @@ export default function LoginPage() {
             </h2>
             {message && <p className='text-red-500 font-medium'>{message}</p>}
             <form action={formAction} className="mt-8 space-y-6">
+                <input type="hidden" value={domain} />
                 <div>
                     <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Seu email</label>
                     <input type="email" name="email" id="email" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-violet-500 focus:border-violet-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-violet-500 dark:focus:border-violet-500" placeholder="name@company.com" required />

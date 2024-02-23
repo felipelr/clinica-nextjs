@@ -16,9 +16,6 @@ export default async function AuthLayout({ children, params }: AuthLayoutProps) 
   const domain = decodeURIComponent(params.domain);
   const data = await getSiteData(domain);
 
-  console.log('domain', domain);
-  console.log('data', data);
-
   if (!data) {
     notFound();
   }
