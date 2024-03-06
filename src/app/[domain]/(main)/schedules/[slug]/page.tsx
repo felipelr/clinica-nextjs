@@ -1,3 +1,4 @@
+import Calendar from "@/components/ui/calendar/calendar";
 import { scheduleService } from "@/prisma/services";
 
 type ScheduleDetailPageProps = {
@@ -14,16 +15,14 @@ async function getScheduleById(id: string) {
 }
 
 export default async function ScheduleDetailPage({ params }: ScheduleDetailPageProps) {
-    const slug = decodeURIComponent(params.slug);
-    const schedule = await getScheduleById(slug)
+    const id = decodeURIComponent(params.slug);
+    const schedule = await getScheduleById(id)
     return (
         <div className="">
             <h4 className="text-2xl font-bold text-violet-500 dark:text-white mb-4">
                 Agenda #{schedule?.id}
             </h4>
-            <pre>
-                {JSON.stringify(schedule, null, 2)}
-            </pre>
+            <Calendar />
         </div>
     )
 }
