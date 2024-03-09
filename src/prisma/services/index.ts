@@ -1,4 +1,4 @@
-import prisma from '@/prisma/index'
+import prisma from '@/prisma'
 import { ScheduleService } from "./schedule-service"
 import { UserService } from './user-service'
 import { CompanyService } from './company-service'
