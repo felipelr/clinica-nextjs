@@ -1,5 +1,5 @@
 import Calendar from "@/components/ui/calendar/calendar";
-import { scheduleService } from "@/prisma/services";
+import { scheduleService } from "@/prisma/factories/schedule-service-factory";
 
 type ScheduleDetailPageProps = {
     params: { slug: string };

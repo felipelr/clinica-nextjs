@@ -4,7 +4,8 @@ import { unstable_cache } from "next/cache";
 import { cookieHelper } from '@/common/helpers/cookieHelper';
 import { jwtHelper } from '../helpers/jwtHelper';
 import { EnvHelper, EnvVariables } from '../helpers/enviromentHelper/envHelper';
-import { companyService, userService } from "@/prisma/services";
+import { userService } from "@/prisma/factories/user-service-factory";
+import { companyService } from "@/prisma/factories/company-service-factory";
 
 export async function getSiteData(domain: string) {
   const rootDomain = EnvHelper.getVariable(EnvVariables.NEXT_PUBLIC_ROOT_DOMAIN) || ''

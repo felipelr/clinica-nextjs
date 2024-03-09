@@ -1,7 +1,7 @@
 import SearchIcon from "@/components/ui/icons/search-icon"
 import Paginate from "@/components/ui/paginate/paginate"
-import { scheduleService } from "@/prisma/services"
-import { MetaProps, ParamsProps } from "@/prisma/services/interfaces/IService"
+import { scheduleService } from "@/prisma/factories/schedule-service-factory"
+import { MetaProps, ParamsProps } from "@/prisma/services/interfaces/service-interface"
 import { Schedule } from '@/prisma/services/types/Schedule'
 import Link from "next/link"
 
@@ -24,9 +24,6 @@ export default async function SchedulesPage({ searchParams }: SchedulesPageProps
 
     return (
         <div className="">
-            <pre>
-                {JSON.stringify(schedules, null, 2)}
-            </pre>
             <h4 className="text-2xl font-bold text-violet-500 dark:text-white mb-4">Agendas</h4>
 
             <div className="pb-4 bg-white dark:bg-gray-900">

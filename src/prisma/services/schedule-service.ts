@@ -1,7 +1,7 @@
-import { IService, MetaProps, ParamsProps } from './interfaces/IService'
+import { ServiceInterface, MetaProps, ParamsProps } from './interfaces/service-interface'
 import { Schedule } from './types/Schedule'
 import { PrismaClient } from '@prisma/client'
-export class ScheduleService implements IService<Schedule> {
+export class ScheduleService implements ServiceInterface<Schedule> {
 
     constructor(private readonly prisma: PrismaClient) {
     }
@@ -18,7 +18,7 @@ export class ScheduleService implements IService<Schedule> {
             throw err
         }
         finally {
-            await prisma.$disconnect()
+            await this.prisma.$disconnect()
         }
     }
 
@@ -51,7 +51,7 @@ export class ScheduleService implements IService<Schedule> {
             throw err
         }
         finally {
-            await prisma.$disconnect()
+            await this.prisma.$disconnect()
         }
     }
 }

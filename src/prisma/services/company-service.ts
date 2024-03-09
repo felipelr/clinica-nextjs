@@ -1,9 +1,8 @@
-import { IService, ParamsProps } from './interfaces/IService'
-import prisma from '@/prisma/index'
+import { ServiceInterface, ParamsProps } from './interfaces/service-interface'
 import { Company } from './types/Company'
 import { PrismaClient } from '@prisma/client'
 
-export class CompanyService implements IService<Company> {
+export class CompanyService implements ServiceInterface<Company> {
 
     constructor(private readonly prisma: PrismaClient) {
     }
@@ -20,7 +19,7 @@ export class CompanyService implements IService<Company> {
             throw err
         }
         finally {
-            await prisma.$disconnect()
+            await this.prisma.$disconnect()
         }
     }
 
@@ -39,7 +38,7 @@ export class CompanyService implements IService<Company> {
             throw err
         }
         finally {
-            await prisma.$disconnect()
+            await this.prisma.$disconnect()
         }
     }
 
@@ -55,7 +54,7 @@ export class CompanyService implements IService<Company> {
             throw err
         }
         finally {
-            await prisma.$disconnect()
+            await this.prisma.$disconnect()
         }
     }
 }

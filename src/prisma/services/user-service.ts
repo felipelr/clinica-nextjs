@@ -1,9 +1,8 @@
 import { PrismaClient } from '@prisma/client'
-import { IService } from './interfaces/IService'
+import { ServiceInterface } from './interfaces/service-interface'
 import { User } from './types/User'
-import prisma from '@/prisma/index'
 import bcrypt from 'bcrypt'
-export class UserService implements IService<User> {
+export class UserService implements ServiceInterface<User> {
 
     constructor(private readonly prisma: PrismaClient) {
     }
@@ -29,7 +28,7 @@ export class UserService implements IService<User> {
             throw err
         }
         finally {
-            await prisma.$disconnect()
+            await this.prisma.$disconnect()
         }
     }
 
@@ -53,7 +52,7 @@ export class UserService implements IService<User> {
             throw err
         }
         finally {
-            await prisma.$disconnect()
+            await this.prisma.$disconnect()
         }
     }
 
@@ -79,7 +78,7 @@ export class UserService implements IService<User> {
             throw err
         }
         finally {
-            await prisma.$disconnect()
+            await this.prisma.$disconnect()
         }
     }
 }
