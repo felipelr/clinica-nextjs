@@ -11,5 +11,6 @@ export default defineConfig({
     },
     test: {
         environment: 'jsdom',
+        setupFiles: ['./__tests__/mocks/prisma/prisma-client-mock.ts'],
     },
 })

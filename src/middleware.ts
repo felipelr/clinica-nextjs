@@ -31,8 +31,7 @@ export default async function middleware(request: NextRequest) {
 
   const searchParams = request.nextUrl.searchParams.toString();
   // Get the pathname of the request (e.g. /, /about, /blog/first-post)
-  const path = `${url.pathname}${searchParams.length > 0 ? `?${searchParams}` : ""
-    }`;
+  const path = `${url.pathname}${searchParams.length > 0 ? `?${searchParams}` : ""}`;
 
   // rewrite root application to `/home` folder
   if (

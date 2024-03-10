@@ -1,6 +1,6 @@
 'use client'
 
-import { authenticate } from '@/common/auth/actions'
+import { AuthenticateState, authenticate } from '@/common/auth/actions'
 import { useFormState, useFormStatus } from 'react-dom'
 import { redirect } from 'next/navigation'
 import ButtonPrimary from '@/components/ui/buttons/button-primary'
@@ -11,9 +11,14 @@ type loginPageProps = {
 
 export default function LoginPage({ params }: loginPageProps) {
     const domain = decodeURIComponent(params.domain);
-    const [message, formAction] = useFormState(authenticate, '')
+    const initialState: AuthenticateState.State = {
+        domain,
+        status: '',
+        message: ''
+    }
+    const [state, formAction] = useFormState(authenticate, initialState)
 
-    if (message === 'sucesss') {
+    if (state.status === 'SUCCESS') {
         redirect('/')
     }
 
@@ -22,7 +27,7 @@ export default function LoginPage({ params }: loginPageProps) {
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
                 Bem vindo!
             </h2>
-            {message && <p className='text-red-500 font-medium'>{message}</p>}
+            {state.message && <p className='text-red-500 font-medium'>{state.message}</p>}
             <form action={formAction} className="mt-8 space-y-6">
                 <input type="hidden" value={domain} />
                 <div>

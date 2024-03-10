@@ -1,22 +1,11 @@
+import { getSchedules } from "@/components/schedules/actions/getSchedules"
 import SearchIcon from "@/components/ui/icons/search-icon"
 import Paginate from "@/components/ui/paginate/paginate"
-import { scheduleService } from "@/prisma/factories/schedule-service-factory"
-import { MetaProps, ParamsProps } from "@/prisma/services/interfaces/service-interface"
-import { Schedule } from '@/prisma/services/types/Schedule'
+import { ParamsProps } from "@/prisma/services/interfaces/service-interface"
 import Link from "next/link"
 
 type SchedulesPageProps = {
     searchParams: ParamsProps
-}
-
-async function getSchedules(params?: ParamsProps): Promise<{ data: Schedule[], meta: MetaProps } | null> {
-    try {
-        return await scheduleService.getAll(params)
-    }
-    catch (err) {
-        console.error(err)
-        return null
-    }
 }
 
 export default async function SchedulesPage({ searchParams }: SchedulesPageProps) {
@@ -77,7 +66,7 @@ export default async function SchedulesPage({ searchParams }: SchedulesPageProps
                     </tbody>
                 </table>
             </div>
-            <Paginate {...schedules?.meta} />
+            <Paginate  {...schedules?.meta} />
         </div>
     )
 }

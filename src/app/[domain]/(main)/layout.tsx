@@ -17,7 +17,6 @@ export default function DashboardLayout({ params, children }: DashboardLayoutPro
     <div className="">
       <Sidebar />
       <div className="p-4 sm:ml-64">
-        <h1>Domain Layout ({domain})</h1>
         {children}
       </div>
     </div>

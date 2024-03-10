@@ -1,4 +1,7 @@
+'use client'
+
 import React from 'react'
+import { useRouter, usePathname, useSearchParams } from 'next/navigation'
 
 type PaginateProps = {
     currentPage?: number,
@@ -13,11 +16,44 @@ export default function Paginate({
     pageSize = 0,
     totalRecords = 0,
     from = 0,
-    to = 0,
+    to = 0
 }: PaginateProps) {
+    const router = useRouter()
+    const pathname = usePathname()
+    const searchParamsValues = useSearchParams()
     const totalPages = totalRecords === 0 ? 0 : totalRecords <= pageSize ? 1 : (totalRecords % pageSize === 0) ? (totalRecords / pageSize) : (Math.floor(totalRecords / pageSize) + 1)
     const normalPageClass = 'flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'
     const activePageClass = 'flex items-center justify-center px-3 h-8 text-violet-600 border border-gray-300 bg-violet-50 hover:bg-violet-100 hover:text-violet-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white'
+
+    const searchParams: Record<string, string> = {}
+    searchParamsValues.forEach((value: string, key: string) => {
+        searchParams[key] = value
+    })
+
+    const handlePageChange = (page: number) => {
+        const params = new URLSearchParams({ ...searchParams, page: String(page) }).toString()
+        router.push(`${pathname}?${params}`)
+    }
+
+    const handleNextPage = () => {
+        const { page = '1' } = searchParams
+        if (Number(page) === totalPages) {
+            return
+        }
+
+        const params = new URLSearchParams({ ...searchParams, page: String(Number(page) + 1) }).toString()
+        router.push(`${pathname}?${params}`)
+    }
+
+    const handlePreviousPage = () => {
+        const { page = '1' } = searchParams
+        if (Number(page) === 1) {
+            return
+        }
+
+        const params = new URLSearchParams({ ...searchParams, page: String(Number(page) - 1) }).toString()
+        router.push(`${pathname}?${params}`)
+    }
 
     if (totalPages <= 6) {
         return (
@@ -27,20 +63,24 @@ export default function Paginate({
                 </span>
                 <ul className="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
                     <li>
-                        <a href="#" className="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Previous</a>
+                        <button onClick={handlePreviousPage} type="button" className="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                            Anterior
+                        </button>
                     </li>
                     {Array.from({ length: totalPages }).map((_, index) => {
                         const page = index + 1
                         return (
                             <li key={`page-${page}`}>
-                                <a href="#" className={page === currentPage ? activePageClass : normalPageClass}>
+                                <button onClick={() => handlePageChange(page)} type="button" className={page === currentPage ? activePageClass : normalPageClass}>
                                     {page}
-                                </a>
+                                </button>
                             </li>
                         )
                     })}
                     <li>
-                        <a href="#" className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Next</a>
+                        <button onClick={handleNextPage} type="button" className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                            Próximo
+                        </button>
                     </li>
                 </ul>
             </nav>
@@ -67,9 +107,9 @@ export default function Paginate({
         if (isLastPage) {
             return (
                 <li key={`page-${index}`}>
-                    <a href="#" className={totalPages === currentPage ? activePageClass : normalPageClass}>
+                    <button onClick={() => handlePageChange(totalPages)} type="button" className={totalPages === currentPage ? activePageClass : normalPageClass}>
                         {totalPages}
-                    </a>
+                    </button>
                 </li>
             )
         }
@@ -84,9 +124,9 @@ export default function Paginate({
 
         return (
             <li key={`page-${index}`}>
-                <a href="#" className={page === currentPage ? activePageClass : normalPageClass}>
+                <button onClick={() => handlePageChange(page)} type="button" className={page === currentPage ? activePageClass : normalPageClass}>
                     {page}
-                </a>
+                </button>
             </li>
         )
     })
@@ -98,11 +138,15 @@ export default function Paginate({
             </span>
             <ul className="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
                 <li>
-                    <a href="#" className="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Previous</a>
+                    <button onClick={handlePreviousPage} type="button" className="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                        Anterior
+                    </button>
                 </li>
                 {pagination}
                 <li>
-                    <a href="#" className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Next</a>
+                    <button onClick={handleNextPage} type="button" className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                        Próximo
+                    </button>
                 </li>
             </ul>
         </nav>

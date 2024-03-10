@@ -7,7 +7,7 @@ type ScheduleDetailPageProps = {
 
 async function getScheduleById(id: string) {
     try {
-        return await scheduleService.getById(id)
+        return await scheduleService.getByIdWithEvents(id)
     } catch (err) {
         console.error(err)
         return null
@@ -19,10 +19,10 @@ export default async function ScheduleDetailPage({ params }: ScheduleDetailPageP
     const schedule = await getScheduleById(id)
     return (
         <div className="">
-            <h4 className="text-2xl font-bold text-violet-500 dark:text-white mb-4">
-                Agenda #{schedule?.id}
+            <h4 className="pb-0 mb-0 text-2xl font-bold text-violet-500 dark:text-white">
+                Agenda: {schedule?.name}
             </h4>
-            <Calendar />
+            <Calendar schedule={schedule} />
         </div>
     )
 }

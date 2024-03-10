@@ -1,26 +1,14 @@
-import { afterAll, afterEach, beforeAll, expect, test } from 'vitest'
+import { expect, test, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { HttpResponse, http } from 'msw'
-import { setupServer } from 'msw/node'
-import Page from '@/app/(auth)/login/page'
+import Page from '@/app/[domain]/(auth)/login/page'
 
-const server = setupServer(
-    http.post('/auth', () => {
-        // Note that you DON'T have to stringify the JSON!
-        return HttpResponse.json({
-            user: {
-                id: 'abc-123',
-                name: 'John Maverick',
-            },
-        })
-    }),
-)
+vi.mock('react-dom', () => ({
+    useFormState: vi.fn((fn: () => void, state: string) => ''),
+    useFormStatus: vi.fn(() => ({ pending: false }))
+}))
 
-beforeAll(() => server.listen())
-afterEach(() => server.resetHandlers())
-afterAll(() => server.close())
-
-test('Page', () => {
-    render(<Page />)
-    expect(screen.getAllByRole('heading')).toBeDefined()
+test('should render LoginPage component', () => {
+    render(<Page params={{ domain: 'test.localhost:3000' }} />)
+    const title = screen.getByRole("heading", { level: 2, name: 'Bem vindo!' })
+    expect(title).toBeDefined()
 })

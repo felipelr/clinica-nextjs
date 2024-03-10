@@ -1,7 +1,8 @@
-import { ServiceInterface, MetaProps, ParamsProps } from './interfaces/service-interface'
-import { Schedule } from './types/Schedule'
+import { MetaProps, ParamsProps } from '@/prisma/services/interfaces/service-interface'
+import { Schedule, ScheduleWithEvents } from '@/prisma/services/types/Schedule'
 import { PrismaClient } from '@prisma/client'
-export class ScheduleService implements ServiceInterface<Schedule> {
+import { ScheduleServiceInterface } from '@/prisma/services/interfaces/schedule-service-interface'
+export class ScheduleService implements ScheduleServiceInterface {
 
     constructor(private readonly prisma: PrismaClient) {
     }
@@ -45,6 +46,22 @@ export class ScheduleService implements ServiceInterface<Schedule> {
                     to: end > totalRecords ? totalRecords : end
                 }
             }
+        }
+        catch (err) {
+            console.error(err)
+            throw err
+        }
+        finally {
+            await this.prisma.$disconnect()
+        }
+    }
+
+    async getByIdWithEvents(id: string): Promise<ScheduleWithEvents | null> {
+        try {
+            return await this.prisma.schedule.findUnique({
+                where: { id },
+                include: { domain: true, professional: true, scheduleEvents: true }
+            })
         }
         catch (err) {
             console.error(err)

@@ -6,12 +6,12 @@ const prisma = new PrismaClient()
 async function main() {
     const passwordTest = await bcrypt.hash('test123', 10)
     const domainFind = await prisma.domain.findFirst({
-        where: { domain: 'test.com' }
+        where: { domain: 'clinica-web-erp.com.br' }
     })
     if (!domainFind) {
         const domainTest = await prisma.domain.create({
             data: {
-                domain: 'localhost:3000',
+                domain: 'clinica-web-erp.com.br',
                 subdomain: 'test',
                 users: {
                     create: [
@@ -51,15 +51,6 @@ async function main() {
         })
         console.log({ professinalTest })
 
-        const scheduleTest = await prisma.schedule.create({
-            data: {
-                name: 'Schedule Test',
-                domainId: domainTest.id,
-                professionalId: professinalTest.id
-            }
-        })
-        console.log({ scheduleTest })
-
         const patientTest1 = await prisma.patient.create({
             data: {
                 name: 'Patient Test 1',
@@ -80,30 +71,29 @@ async function main() {
         })
         console.log({ patientTest1, patientTest2 })
 
-        const scheduleEvents = await prisma.scheduleEvent.createMany({
-            data: [
-                { 
-                    title: 'Event 1', 
-                    description: '', 
-                    startDate: new Date(2024, 1, 20, 8, 30, 0),
-                    endDate: new Date(2024, 1, 20, 9, 30, 0),
-                    patientId: patientTest1.id, 
-                    scheduleId: scheduleTest.id, 
-                    domainId: domainTest.id 
-                },
-                { 
-                    title: 'Event 2', 
-                    description: '', 
-                    startDate: new Date(2024, 1, 21, 8, 30, 0),
-                    endDate: new Date(2024, 1, 21, 9, 30, 0),
-                    patientId: patientTest2.id, 
-                    scheduleId: scheduleTest.id, 
-                    domainId: domainTest.id 
+        const shcedulePromises = Array.from({ length: 20 }).map((_, index) => {
+            return prisma.schedule.create({
+                data: {
+                    name: `Schedule Test ${index + 1}`,
+                    domainId: domainTest.id,
+                    professionalId: professinalTest.id,
+                    scheduleEvents: {
+                        create: Array.from({ length: 20 }).map((_, subIndex) => {
+                            return { 
+                                title: `Event ${subIndex + 1}`, 
+                                description: `Event Description ${subIndex + 1}`, 
+                                startDate: new Date(2024, 1, subIndex + 5, 8, 30, 0),
+                                endDate: new Date(2024, 1, subIndex + 5, 9, 30, 0),
+                                patientId: subIndex % 2 === 0 ?  patientTest1.id : patientTest2.id, 
+                                domainId: domainTest.id 
+                            }
+                        })
+                    }
                 }
-            ]
+            })
         })
-
-        console.log({ scheduleEvents })
+        const scheduleTest = await Promise.all(shcedulePromises)
+        console.log({ scheduleTest })
     }
     else {
         console.log('Seed already created.')

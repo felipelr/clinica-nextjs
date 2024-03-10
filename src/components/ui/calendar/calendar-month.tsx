@@ -58,20 +58,21 @@ export default function CalendarMonth({ currentDate, days }: CalendarMonthProps)
                     */}
                     {days.map(({ date, events }) => {
                         const isTodayClass = date.getTime() === today.getTime() ? 'flex h-6 w-6 items-center justify-center rounded-full bg-violet-600 font-semibold text-white' : ''
+                        const isCurrentDate = isTodayClass === '' && date.getTime() === currentDate.getTime() ? 'flex h-6 w-6 items-center justify-center rounded-full bg-gray-900 font-semibold text-white' : ''
                         const isCurrentMonthClass = date.getMonth() === currentDate.getMonth() ? 'bg-white' : 'bg-gray-50 text-gray-500'
                         return (
-                            <div key={date.getTime()} className={`relative px-3 py-2 ${isCurrentMonthClass}`}>
-                                <time className={isTodayClass} dateTime={CalendarHelper.formatEnUS(dateTimeFormat, date)}>{date.getDate()}</time>
+                            <div key={date.getTime()} className={`min-h-24 relative px-3 py-2 ${isCurrentMonthClass}`}>
+                                <time className={`${isTodayClass} ${isCurrentDate}`} dateTime={CalendarHelper.formatEnUS(dateTimeFormat, date)}>{date.getDate()}</time>
                                 {events && (
                                     <ol className="mt-2">
                                         {events?.map(ev => (
-                                            <li key={ev.date.getTime()}>
+                                            <li key={ev.startDate.getTime()}>
                                                 <a href="#" className="group flex">
-                                                    <p className="flex-auto truncate font-medium text-violet-500 group-hover:text-violet-800">
+                                                    <p className="flex-auto truncate font-medium text-violet-500 group-hover:text-violet-800 group-hover:underline">
                                                         {ev.title}
                                                     </p>
-                                                    <time dateTime={CalendarHelper.formatUTC(dateTimeFormat, ev.date)} className="ml-3 hidden flex-none text-violet-500 group-hover:text-violet-800 xl:block">
-                                                        {timeFormat.format(ev.date)}
+                                                    <time dateTime={CalendarHelper.formatUTC(dateTimeFormat, ev.startDate)} className="ml-3 hidden flex-none text-violet-500 group-hover:text-violet-800 xl:block">
+                                                        {timeFormat.format(ev.startDate)}
                                                     </time>
                                                 </a>
                                             </li>
@@ -124,7 +125,7 @@ export default function CalendarMonth({ currentDate, days }: CalendarMonthProps)
                                 {events && (
                                     <span className="-mx-0.5 mt-auto flex flex-wrap-reverse">
                                         {events?.map(ev => (
-                                            <span key={`${ev.date.getTime()}-mobile`} className="mx-0.5 mb-1 h-1.5 w-1.5 rounded-full bg-gray-400"></span>
+                                            <span key={`${ev.startDate.getTime()}-mobile`} className="mx-0.5 mb-1 h-1.5 w-1.5 rounded-full bg-gray-400"></span>
                                         ))}
                                     </span>
                                 )}

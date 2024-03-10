@@ -5,16 +5,20 @@ import CalendarMonth from "./calendar-month"
 import { CalendarHelper } from "@/common/helpers/calendarHelper/calendarHelper"
 import DropdownDefault from "../dropdown/dropdown-default"
 import EllipsesIcon from "../icons/ellipses-icon"
+import { ScheduleWithEvents } from "@/prisma/services/types/Schedule"
+import { ScheduleEvent } from "@/prisma/services/types/ScheduleEvent"
 
 export type DayProps = {
     date: Date
-    events?: {
-        date: Date
-        title: string
-    }[]
+    events?: ScheduleEvent[]
 }
 
-export default function Calendar() {
+export type CalendarProps = {
+    schedule?: ScheduleWithEvents | null
+}
+
+export default function Calendar({ schedule }: CalendarProps) {
+    const [view, setView] = useState('month')
     const [currentDate, setCurrentDate] = useState(CalendarHelper.getToday())
 
     const firstDayCalendar = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1)
@@ -28,10 +32,10 @@ export default function Calendar() {
     while (firstDayCalendar.getTime() <= lastDayOfCalendar.getTime()) {
         days.push({
             date: new Date(firstDayCalendar.getTime()),
-            events: firstDayCalendar.getDate() === 10 ? [{
-                date: new Date(firstDayCalendar.getFullYear(), firstDayCalendar.getMonth() + 1, firstDayCalendar.getDate(), 10),
-                title: 'Date night'
-            }] : []
+            events: schedule?.scheduleEvents?.filter(item => {
+                const eventDate = new Date(item.startDate.getFullYear(), item.startDate.getMonth(), item.startDate.getDate())
+                return eventDate.getTime() === firstDayCalendar.getTime()
+            }) as ScheduleEvent[] || []
         })
         firstDayCalendar.setDate(firstDayCalendar.getDate() + 1)
     }
@@ -39,7 +43,12 @@ export default function Calendar() {
     const handleNextDay = () => {
         setCurrentDate(prev => {
             const date = new Date(prev.getFullYear(), prev.getMonth(), prev.getDate())
-            date.setDate(date.getDate() + 1)
+            if (view === 'month') {
+                date.setMonth(date.getMonth() + 1)
+            }
+            else {
+                date.setDate(date.getDate() + 1)
+            }
             return date
         })
     }
@@ -47,14 +56,19 @@ export default function Calendar() {
     const handlePreviousDay = () => {
         setCurrentDate(prev => {
             const date = new Date(prev.getFullYear(), prev.getMonth(), prev.getDate())
-            date.setDate(date.getDate() - 1)
+            if (view === 'month') {
+                date.setMonth(date.getMonth() - 1)
+            }
+            else {
+                date.setDate(date.getDate() - 1)
+            }
             return date
         })
     }
 
     return (
         <div className="lg:flex lg:h-full lg:flex-col">
-            <header className="flex items-center justify-between border-b border-gray-200 px-6 py-4 lg:flex-none">
+            <header className="flex items-center justify-between border-b border-gray-200 px-4 py-2 lg:flex-none">
                 <h1 className="text-base font-semibold leading-6 text-gray-900">
                     <time dateTime="2022-01">{CalendarHelper.MONTH[currentDate.getMonth()]} {currentDate.getFullYear()}</time>
                 </h1>
